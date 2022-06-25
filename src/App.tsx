@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import avatarSrc from './assets/avatar.jpeg';
 
 const App: FC = () => {
@@ -135,7 +135,7 @@ const App: FC = () => {
               >
                 Expo
               </a>
-              .
+              . I also love creating web apps! 🙂
             </p>
             <label
               htmlFor='my-modal-4'
@@ -219,6 +219,8 @@ const App: FC = () => {
 
 export default App;
 
+const MaxInputLength = 10;
+
 const Modal = () => {
   const modalTogglerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -241,6 +243,15 @@ const Modal = () => {
         !modalTogglerRef.current.checked
       ) {
         modalTogglerRef.current.click();
+        return;
+      }
+
+      if (e.code === 'Enter') {
+        setText('');
+        return;
+      }
+      if (inputRef.current.value.length >= MaxInputLength) {
+        console.log('Max');
         return;
       }
       setText((prev) => prev + e.key);
@@ -275,7 +286,7 @@ const Modal = () => {
       <label htmlFor='my-modal-4' className='modal cursor-pointer flex-col'>
         <div className='mockup-code modal-box' onClick={handleFocus}>
           <pre data-prefix='$'>
-            <code>npm i quick-replies</code>
+            <code>npm i virtual-zach</code>
           </pre>
           <pre data-prefix='>' className='text-warning'>
             <code>installing...</code>
@@ -283,7 +294,32 @@ const Modal = () => {
           <pre data-prefix='>' className='text-success'>
             <code>Done!</code>
           </pre>
+          <pre data-prefix='>' className='text-primary-content'>
+            <code>Thank you for visiting!</code>
+          </pre>
+          <div className='pl-12 py-3'>
+            <code>
+              I'd love to share my{' '}
+              <span className='text-primary-content inline-block'>
+                <kbd className='kbd'>c</kbd>ontact info
+              </span>
+              , to have you{' '}
+              <span className='text-primary-content inline-block'>
+                <kbd className='kbd'>s</kbd>
+                ign
+              </span>{' '}
+              my Guestbook, or to have you talk with my{' '}
+              <span className='text-primary-content inline-block'>
+                <kbd className='kbd'>b</kbd>ot 🤖
+              </span>
+            </code>
+          </div>
+          <pre data-prefix=' '></pre>
+          <pre data-prefix='?'>
+            Type <kbd className='kbd'>h</kbd> for help
+          </pre>
           <div className='divider'></div>
+
           <pre data-prefix='~'>
             <input
               type='text'
@@ -293,11 +329,13 @@ const Modal = () => {
               value={text}
               autoFocus
               onChange={(e) => {
-                console.log(e);
                 setText(e.target.value);
               }}
             />
           </pre>
+          <div className='flex justify-end'>
+            <span className='text-sm mr-4 mt-4'>{text.length}/10</span>
+          </div>
         </div>
         <pre className='text-center mt-4 text-sm text-primary-content'>
           Press <kbd className='kbd kbd-sm'>Ctrl</kbd> +{' '}
