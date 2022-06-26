@@ -7,6 +7,7 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   signOut as signFirebaseUserOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -31,7 +32,9 @@ const providers = {
   github: new GithubAuthProvider(),
 };
 
-export const signIn = (provider: keyof typeof providers) => async () => {
+export type ProviderOptions = keyof typeof providers;
+
+export const signIn = async (provider: ProviderOptions) => {
   try {
     const result = await signInWithPopup(auth, providers[provider]);
     const credential =
@@ -50,17 +53,17 @@ export const signIn = (provider: keyof typeof providers) => async () => {
         credential,
       },
       error: {
-        code: undefined,
-        message: undefined,
+        code: null,
+        message: null,
       },
     };
   } catch (error) {
     if (!(error instanceof FirebaseError))
       return {
         result: {
-          user: {},
-          token: undefined,
-          credential: undefined,
+          user: null,
+          token: null,
+          credential: null,
         },
         error: {
           code: '69420',
@@ -70,14 +73,14 @@ export const signIn = (provider: keyof typeof providers) => async () => {
 
     return {
       result: {
-        user: {},
-        token: undefined,
+        user: null,
+        token: null,
         credential:
           provider === 'github'
             ? GithubAuthProvider.credentialFromError(error)
             : provider === 'google'
             ? GoogleAuthProvider.credentialFromError(error)
-            : undefined,
+            : null,
       },
       error: {
         code: error.code,

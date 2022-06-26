@@ -70,15 +70,6 @@ export const Terminal: React.FC<{ modalId: string }> = (props) => {
     inputRef.current.focus();
   }
 
-  //   function copyEmailAddress(e: React.MouseEvent<HTMLButtonElement>) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setShowToast(true);
-  //     navigator.clipboard.writeText('nugentzn@gmail.com');
-  //     futureInterval = setTimeout(() => {
-  //       setShowToast(false);
-  //     }, 3000);
-  //   }
   return (
     <>
       <input
