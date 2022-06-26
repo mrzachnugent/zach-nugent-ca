@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const Hero: React.FC<{ modalHtmlFor: string }> = (props) => {
-  const { modalHtmlFor } = props;
+export const Hero: React.FC<{ modalId: string }> = (props) => {
+  const { modalId } = props;
   return (
     <div className='hero min-h-screen bg-base-200'>
       <div className='hero-content text-center'>
@@ -29,7 +29,7 @@ export const Hero: React.FC<{ modalHtmlFor: string }> = (props) => {
             . I also love creating web apps! 🙂
           </p>
           <label
-            htmlFor={modalHtmlFor}
+            htmlFor={modalId}
             className='btn btn-primary modal-button btn-wide'
           >
             Let's talk

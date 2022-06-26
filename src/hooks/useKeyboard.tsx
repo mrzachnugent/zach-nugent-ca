@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTerminalStore } from '../stores/terminal-store';
 import { wait } from '../utils/wait';
-import { Toast } from './Toast';
 
 let futureInterval: number | undefined;
 
@@ -42,20 +42,31 @@ const BOOT_UP_JSX = [
   </pre>,
 ];
 
-export const Modal: React.FC = () => {
-  const modalTogglerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const bottomRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const [text, setText] = useState('');
-  const [showToast, setShowToast] = useState(false);
-  const [displayTexts, setDisplayTexts] = useState<React.ReactNode[]>([]);
+export const useKeyboard = (
+  modalTogglerRef: React.MutableRefObject<HTMLInputElement>,
+  inputRef: React.MutableRefObject<HTMLInputElement>
+) => {
+  const {
+    showToastChange,
+    inputTextReset,
+    inputTextConcat,
+    displayAdd,
+    displayReplace,
+  } = useTerminalStore();
+
+  function copyEmailAddress(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    showToastChange(true);
+    console.log('here');
+    navigator.clipboard.writeText('nugentzn@gmail.com');
+    futureInterval = setTimeout(() => {
+      showToastChange(false);
+    }, 3000);
+  }
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [displayTexts]);
-
-  useEffect(() => {
-    function handleTyping(e: KeyboardEvent) {
+    async function handleTyping(e: KeyboardEvent) {
       e.preventDefault();
       if (e.shiftKey && e.code === 'KeyQ' && modalTogglerRef.current.checked) {
         modalTogglerRef.current.click();
@@ -68,8 +79,7 @@ export const Modal: React.FC = () => {
       }
 
       if (e.code === 'Enter') {
-        setDisplayTexts((prev) => [
-          ...prev,
+        displayAdd([
           <pre data-prefix='>'>
             <code>{inputRef.current.value}</code>
           </pre>,
@@ -78,8 +88,7 @@ export const Modal: React.FC = () => {
           inputRef.current.value.toLowerCase() === 'h' ||
           inputRef.current.value.toLowerCase() === 'help'
         ) {
-          setDisplayTexts((prev) => [
-            ...prev,
+          displayAdd([
             <div className='w-full'>
               <div className='divider'></div>
               <pre data-prefix='>' className=' whitespace-pre-wrap pb-2'>
@@ -131,8 +140,7 @@ export const Modal: React.FC = () => {
           ]);
         }
         if (inputRef.current.value.toLowerCase() === 'c') {
-          setDisplayTexts((prev) => [
-            ...prev,
+          displayAdd([
             <>
               <div className='divider'></div>
               <pre data-prefix='>' className='text-primary-content'>
@@ -209,31 +217,43 @@ export const Modal: React.FC = () => {
           ]);
         }
         if (inputRef.current.value.toLowerCase() === 's') {
-          setDisplayTexts((prev) => [
-            ...prev,
+          displayAdd([
             <pre data-prefix='>' className='text-primary-content'>
               <code>SIGN MY FRICKIN GUESTBOOK</code>
             </pre>,
           ]);
         }
         if (inputRef.current.value.toLowerCase() === 'b') {
-          setDisplayTexts((prev) => [
-            ...prev,
+          displayAdd([
             <pre data-prefix='>' className='text-primary-content'>
               <code>🤖 ROBOT</code>
             </pre>,
           ]);
         }
         if (inputRef.current.value.toLowerCase() === 'clear') {
-          setDisplayTexts((prev) => [BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
+          displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
         }
-        setText('');
+        if (inputRef.current.value.toLowerCase() === 'init') {
+          inputTextReset();
+          displayReplace([BOOT_UP_JSX[0]]);
+          for (let i = 1; i < BOOT_UP_JSX.length; i++) {
+            await wait(300);
+            displayAdd([BOOT_UP_JSX[i]]);
+          }
+          return;
+        }
+        inputTextReset();
         return;
       }
       if (inputRef.current.value.length >= MAX_INPUT_LENGTH) {
         return;
       }
-      setText((prev) => prev + e.key);
+
+      if (document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+        console.log("wasn't in focus");
+      }
+      inputTextConcat(e.key);
     }
 
     document.addEventListener('keypress', handleTyping);
@@ -243,82 +263,4 @@ export const Modal: React.FC = () => {
       clearInterval(futureInterval);
     };
   }, []);
-
-  function handleFocus(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    e.preventDefault();
-    inputRef.current.focus();
-  }
-
-  function copyEmailAddress(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowToast(true);
-    console.log('here');
-    navigator.clipboard.writeText('nugentzn@gmail.com');
-    futureInterval = setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
-  }
-  return (
-    <>
-      <input
-        type='checkbox'
-        id='my-modal-4'
-        className='modal-toggle'
-        ref={modalTogglerRef}
-        onChange={async (e) => {
-          setText('');
-          if (e.target.checked && !displayTexts.length) {
-            setDisplayTexts((prev) => [...prev, BOOT_UP_JSX[0]]);
-            for (let i = 1; i < BOOT_UP_JSX.length; i++) {
-              await wait(300);
-              setDisplayTexts((prev) => [...prev, BOOT_UP_JSX[i]]);
-            }
-          }
-        }}
-      />
-      <label htmlFor='my-modal-4' className='modal cursor-pointer flex-col '>
-        <div
-          className='mockup-code bg-base-100 max-w-2xl mx-2'
-          style={{ width: '95%' }}
-        >
-          <div className='overflow-y-auto h-72 relative pb-4'>
-            {/**
-             * todo(zach): fix key problem fro mapping
-             */}
-            {displayTexts.map((e) => e)}
-            <div ref={bottomRef} />
-          </div>
-          <div className='h-0.5 w-full bg-neutral-content opacity-30 mb-6'></div>
-          <div onClick={handleFocus}>
-            <pre data-prefix='~'>
-              <input
-                type='text'
-                placeholder='Type here'
-                className='input w-fit text-lg'
-                ref={inputRef}
-                value={text}
-                autoFocus
-                onChange={(e) => {
-                  setText(e.target.value);
-                }}
-              />
-            </pre>
-            <div className='flex justify-end'>
-              <span className='text-sm mr-4 mt-4'>
-                {text.length}/{MAX_INPUT_LENGTH}
-              </span>
-            </div>
-          </div>
-        </div>
-        <pre className='text-center mt-4 text-sm text-primary-content'>
-          Press <kbd className='kbd kbd-sm'>Shift</kbd> +{' '}
-          <kbd className='kbd kbd-sm'>Q</kbd> to quit.
-        </pre>
-        {showToast && (
-          <Toast msg='Copied email address: nugentzn@gmail to clip board.' />
-        )}
-      </label>
-    </>
-  );
 };

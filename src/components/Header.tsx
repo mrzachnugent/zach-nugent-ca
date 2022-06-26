@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Spacer } from './Spacer';
 
-export const Header: React.FC<{ avatarSrc: string; modalHtmlFor: string }> = (
+export const Header: React.FC<{ avatarSrc: string; modalId: string }> = (
   props
 ) => {
-  const { avatarSrc, modalHtmlFor } = props;
+  const { avatarSrc, modalId } = props;
 
   return (
     <div className='navbar bg-base-100 absolute'>
@@ -46,7 +46,7 @@ export const Header: React.FC<{ avatarSrc: string; modalHtmlFor: string }> = (
                 <span className='px-3'> + </span>
                 <kbd className='kbd kbd-lg'>T</kbd>
               </pre>
-              <label htmlFor={modalHtmlFor} className='btn btn-outline'>
+              <label htmlFor={modalId} className='btn btn-outline'>
                 Open
               </label>
             </div>
