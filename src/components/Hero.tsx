@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const Hero: React.FC<{ modalHtmlFor: string }> = (props) => {
-  const { modalHtmlFor } = props;
+export const Hero: React.FC<{ modalId: string }> = (props) => {
+  const { modalId } = props;
   return (
     <div className='hero min-h-screen bg-base-200'>
       <div className='hero-content text-center'>
@@ -10,7 +10,7 @@ export const Hero: React.FC<{ modalHtmlFor: string }> = (props) => {
             Hi, I'm Zach 👋
           </h1>
           <p className='py-6 text-slate-200'>
-            I'm a mobile developer at{' '}
+            I create web and mobile apps! I work at{' '}
             <a
               className='link link-hover'
               href='https://www.usewalter.com'
@@ -25,11 +25,11 @@ export const Hero: React.FC<{ modalHtmlFor: string }> = (props) => {
               target='_blank'
             >
               Expo
-            </a>
-            . I also love creating web apps! 🙂
+            </a>{' '}
+            .
           </p>
           <label
-            htmlFor={modalHtmlFor}
+            htmlFor={modalId}
             className='btn btn-primary modal-button btn-wide'
           >
             Let's talk
