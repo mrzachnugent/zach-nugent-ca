@@ -57,19 +57,11 @@ export const Modal: React.FC = () => {
   useEffect(() => {
     function handleTyping(e: KeyboardEvent) {
       e.preventDefault();
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        e.code === 'KeyQ' &&
-        modalTogglerRef.current.checked
-      ) {
+      if (e.shiftKey && e.code === 'KeyQ' && modalTogglerRef.current.checked) {
         modalTogglerRef.current.click();
         return;
       }
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        e.code === 'KeyT' &&
-        !modalTogglerRef.current.checked
-      ) {
+      if (e.shiftKey && e.code === 'KeyT' && !modalTogglerRef.current.checked) {
         modalTogglerRef.current.click();
         inputRef.current.focus();
         return;
@@ -320,7 +312,7 @@ export const Modal: React.FC = () => {
           </div>
         </div>
         <pre className='text-center mt-4 text-sm text-primary-content'>
-          Press <kbd className='kbd kbd-sm'>Ctrl</kbd> +{' '}
+          Press <kbd className='kbd kbd-sm'>Shift</kbd> +{' '}
           <kbd className='kbd kbd-sm'>Q</kbd> to quit.
         </pre>
         {showToast && (

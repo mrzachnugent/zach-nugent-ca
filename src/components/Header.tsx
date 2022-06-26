@@ -42,7 +42,7 @@ export const Header: React.FC<{ avatarSrc: string; modalHtmlFor: string }> = (
                 Mini terminal
               </span>
               <pre className='text-center my-2 text-sm text-primary-content'>
-                <kbd className='kbd kbd-lg'>Ctrl</kbd>
+                <kbd className='kbd kbd-lg'>Shift</kbd>
                 <span className='px-3'> + </span>
                 <kbd className='kbd kbd-lg'>T</kbd>
               </pre>
