@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTerminalStore } from '../stores/terminal-store';
 import { wait } from '../utils/wait';
 
-let futureInterval: number | undefined;
+let futureInterval: ReturnType<typeof setTimeout> | undefined;
 
 const MAX_INPUT_LENGTH = 20;
 
@@ -179,6 +180,7 @@ export const useKeyboard = (
 ) => {
   const { inputTextReset, inputTextConcat, displayAdd, displayReplace } =
     useTerminalStore();
+  const navigate = useNavigate();
 
   function inputIs(arr: string[]) {
     return arr.some((str) => str === inputRef.current.value.toLowerCase());
@@ -213,7 +215,7 @@ export const useKeyboard = (
             <code>{inputRef.current.value}</code>
           </pre>,
         ]);
-        if (inputIs(['quit'])) {
+        if (inputIs(['quit', 'q'])) {
           modalTogglerRef.current.click();
           displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
           return;
@@ -232,11 +234,7 @@ export const useKeyboard = (
           ]);
         }
         if (inputIs(['b', 'bot'])) {
-          displayAdd([
-            <pre data-prefix='>' className='text-primary-content'>
-              <code>🤖 ROBOT</code>
-            </pre>,
-          ]);
+          navigate('guest-book');
         }
         if (inputIs(['clear'])) {
           displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);

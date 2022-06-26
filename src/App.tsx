@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { GuestBook } from './pages/GuestBook';
 import { Homepage } from './pages/Homepage';
 
 const App: React.FC = () => {
@@ -7,7 +8,8 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Homepage />} />
-        <Route path='/guest-book' element={<div>Guest Book</div>} />
+        <Route path='/guest-book' element={<GuestBook />} />
+        <Route element={<div>404 Page Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );

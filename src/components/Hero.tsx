@@ -10,7 +10,7 @@ export const Hero: React.FC<{ modalId: string }> = (props) => {
             Hi, I'm Zach 👋
           </h1>
           <p className='py-6 text-slate-200'>
-            I'm a mobile developer at{' '}
+            I create web and mobile apps! I work at{' '}
             <a
               className='link link-hover'
               href='https://www.usewalter.com'
@@ -25,8 +25,8 @@ export const Hero: React.FC<{ modalId: string }> = (props) => {
               target='_blank'
             >
               Expo
-            </a>
-            . I also love creating web apps! 🙂
+            </a>{' '}
+            .
           </p>
           <label
             htmlFor={modalId}
