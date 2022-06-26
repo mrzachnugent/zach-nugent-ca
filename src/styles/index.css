@@ -17,6 +17,7 @@
   animation: sliderShape 5s linear infinite;
   display: block;
   z-index: -1;
+  transform: translate(-50%, -50%);
   -webkit-animation: sliderShape 5s linear infinite;
 }
 @keyframes sliderShape {
