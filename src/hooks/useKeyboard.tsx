@@ -227,14 +227,15 @@ export const useKeyboard = (
           displayAdd([<ContactSection />]);
         }
         if (inputIs(['s', 'sign'])) {
-          displayAdd([
-            <pre data-prefix='>' className='text-primary-content'>
-              <code>SIGN MY FRICKIN GUESTBOOK</code>
-            </pre>,
-          ]);
+          navigate('guest-book');
+          displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
         }
         if (inputIs(['b', 'bot'])) {
-          navigate('guest-book');
+          displayAdd([
+            <pre data-prefix='>' className='text-primary-content'>
+              <code>🤖 ROBOT</code>
+            </pre>,
+          ]);
         }
         if (inputIs(['clear'])) {
           displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
