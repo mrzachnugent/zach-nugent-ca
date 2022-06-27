@@ -84,8 +84,11 @@ export const GuestBook: React.FC = () => {
         setUser(null);
       }
     });
-    if (!user?.uid) return;
-
+    if (!user?.uid) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     const q = query(collection(db, 'guest-book-signatures'));
     const unsub = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
