@@ -6,8 +6,9 @@ export const Header: React.FC<{
   avatarSrc?: string;
   modalId?: string;
   onLogOut?(): void;
+  name?: string | null;
 }> = (props) => {
-  const { avatarSrc, modalId, onLogOut } = props;
+  const { avatarSrc, modalId, onLogOut, name } = props;
 
   return (
     <div className='navbar bg-base-100 absolute'>
@@ -21,6 +22,11 @@ export const Header: React.FC<{
         </a>
       </div>
       <div className='flex-none'>
+        {name && (
+          <div className='tooltip tooltip-bottom z-10' data-tip={name}>
+            <p className='text-sm font-bold'>Hi!</p>
+          </div>
+        )}
         {modalId && (
           <div className='dropdown dropdown-end'>
             {/* Terminal Button Dropdown */}
@@ -143,7 +149,7 @@ export const Header: React.FC<{
                   </li>{' '}
                 </>
               ) : (
-                <button className='btn btn-warning' onClick={onLogOut}>
+                <button className='btn btn-info' onClick={onLogOut}>
                   Log out
                 </button>
               )}
