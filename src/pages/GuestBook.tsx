@@ -148,17 +148,7 @@ export const GuestBook: React.FC = () => {
   };
 
   async function handleSignGuestBook() {
-    console.log({
-      signature: {
-        user,
-        message,
-        rating,
-      },
-      user: {
-        ...user,
-        hasAlreadySigned: true,
-      },
-    });
+    setHasSigned(true);
     try {
       await addDoc(collection(db, 'guest-book-signatures'), {
         user: {
