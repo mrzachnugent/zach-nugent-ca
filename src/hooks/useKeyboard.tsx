@@ -226,9 +226,11 @@ export const useKeyboard = (
         if (inputIs(['c', 'connect'])) {
           displayAdd([<ContactSection />]);
         }
-        if (inputIs(['s', 'sign'])) {
+        if (inputIs(['s', 'sign', 'guest book', 'book'])) {
           navigate('guest-book');
           displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
+          modalTogglerRef.current.click();
+          window.scrollTo(0, 0);
         }
         if (inputIs(['b', 'bot'])) {
           displayAdd([
@@ -237,6 +239,13 @@ export const useKeyboard = (
             </pre>,
           ]);
         }
+        if (inputIs(['home'])) {
+          navigate('/');
+          displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
+          modalTogglerRef.current.click();
+          window.scrollTo(0, 0);
+        }
+
         if (inputIs(['clear'])) {
           displayReplace([BOOT_UP_JSX[BOOT_UP_JSX.length - 1]]);
         }

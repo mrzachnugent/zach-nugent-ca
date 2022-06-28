@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Overwrite the default to keep the scrollbar always visible */
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .blob::before {
   position: absolute;
   content: '';
@@ -37,4 +52,13 @@
     border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
     transform: translate(-50%, -50%) translate3d(0, -3px, 0) rotateZ(0.01deg);
   }
+}
+
+.btn-login {
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 8px;
 }
