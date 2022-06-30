@@ -1,102 +1,77 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useKeyboard } from '../../hooks/useKeyboard';
-import { useTerminalStore } from '../../stores/terminal-store';
-import { wait } from '../../utils/wait';
+import {
+  ChangeEvent,
+  FC,
+  MouseEvent,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { TERMINAL_MODAL_ID } from '../../constants';
+import { useTerminalStore } from '../../stores';
+import { wait } from '../../utils';
 import { Toast } from '../Toast';
+import { BOOT_UP_JSX, MAX_INPUT_LENGTH } from './Terminal.constants';
+import { useTerminal } from './useTerminal';
 
-let futureInterval: number | undefined;
+export const Terminal: FC = () => {
+  const modalTogglerRef = useRef() as MutableRefObject<HTMLInputElement>;
+  const inputRef = useRef() as MutableRefObject<HTMLInputElement>;
+  const bottomRef = useRef() as MutableRefObject<HTMLDivElement>;
+  const [inputCount, setInputCount] = useState(0);
 
-const MAX_INPUT_LENGTH = 20;
-
-const BOOT_UP_JSX = [
-  <pre data-prefix='$'>
-    <code>npm i virtual-zach</code>
-  </pre>,
-  <pre data-prefix='>' className='text-warning'>
-    <code>installing...</code>
-  </pre>,
-  <pre data-prefix='>' className='text-success'>
-    <code>Done!</code>
-  </pre>,
-  <pre data-prefix='>' className='text-primary-content'>
-    <code>Thank you for visiting!</code>
-  </pre>,
-  <div className='pl-12'>
-    <code>
-      I'd love to{' '}
-      <span className='text-primary-content inline-block'>
-        <kbd className='kbd'>c</kbd>onnect
-      </span>
-      , have you{' '}
-      <span className='text-primary-content inline-block'>
-        <kbd className='kbd'>s</kbd>
-        ign
-      </span>{' '}
-      my Guest Book, or keep you entertained with my{' '}
-      <span className='text-primary-content inline-block'>
-        <kbd className='kbd'>b</kbd>ot 🤖
-      </span>
-    </code>
-  </div>,
-  <pre data-prefix=' '></pre>,
-  <pre data-prefix='?' className='pb-4'>
-    Type <kbd className='kbd'>h</kbd> for help
-  </pre>,
-];
-
-export const Terminal: React.FC<{ modalId: string }> = (props) => {
-  const { modalId } = props;
-  const modalTogglerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const bottomRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-
-  const {
-    display,
-    inputText,
-    inputTextReplace,
-    inputTextReset,
-    displayAdd,
-    showToast,
-  } = useTerminalStore();
+  const { display, displayAdd, showToast } = useTerminalStore();
+  useTerminal(modalTogglerRef, inputRef);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [display]);
 
-  useKeyboard(modalTogglerRef, inputRef);
+  useEffect(() => {
+    setInputCount(inputRef.current.value.length);
+  }, [inputRef]);
 
-  function handleFocus(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  function handleFocus(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) {
     e.preventDefault();
     inputRef.current.focus();
+  }
+
+  async function handleOnModalToggleChange(e: ChangeEvent<HTMLInputElement>) {
+    if (inputRef.current?.value) inputRef.current.value = '';
+    if (e.target.checked && !display.length) {
+      displayAdd([BOOT_UP_JSX[0]]);
+      for (let i = 1; i < BOOT_UP_JSX.length; i++) {
+        await wait(300);
+        displayAdd([BOOT_UP_JSX[i]]);
+      }
+    }
+  }
+
+  function handleOnInputChange(e: ChangeEvent<HTMLInputElement>) {
+    setInputCount(e.target.value.length);
   }
 
   return (
     <>
       <input
         type='checkbox'
-        id={modalId}
+        id={TERMINAL_MODAL_ID}
         className='modal-toggle'
         ref={modalTogglerRef}
-        onChange={async (e) => {
-          inputTextReset();
-          if (e.target.checked && !display.length) {
-            displayAdd([BOOT_UP_JSX[0]]);
-            for (let i = 1; i < BOOT_UP_JSX.length; i++) {
-              await wait(300);
-              displayAdd([BOOT_UP_JSX[i]]);
-            }
-          }
-        }}
+        onChange={handleOnModalToggleChange}
       />
-      <label htmlFor={modalId} className='modal cursor-pointer flex-col '>
+      <label
+        htmlFor={TERMINAL_MODAL_ID}
+        className='modal cursor-pointer flex-col '
+      >
         <div
           className='mockup-code bg-base-100 max-w-2xl mx-2'
           style={{ width: '95%' }}
         >
-          <div className='overflow-y-auto h-72 relative pb-4'>
-            {/**
-             * todo(zach): fix key problem fro mapping
-             */}
+          <div
+            className='overflow-y-auto h-72 relative pb-4'
+            onClick={handleFocus}
+          >
             {display.map((e) => e)}
             <div ref={bottomRef} />
           </div>
@@ -108,16 +83,13 @@ export const Terminal: React.FC<{ modalId: string }> = (props) => {
                 placeholder='Type here'
                 className='input w-fit text-lg'
                 ref={inputRef}
-                value={inputText}
-                autoFocus
-                onChange={(e) => {
-                  inputTextReplace(e.target.value);
-                }}
+                maxLength={MAX_INPUT_LENGTH}
+                onChange={handleOnInputChange}
               />
             </pre>
             <div className='flex justify-end'>
               <span className='text-sm mr-4 mt-4'>
-                {inputText.length}/{MAX_INPUT_LENGTH}
+                {inputCount}/{MAX_INPUT_LENGTH}
               </span>
             </div>
           </div>

@@ -1,9 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 
-export const Toast: React.FC<{ msg: string }> = (props) => {
+export const Toast: FC<{ msg: string }> = (props) => {
   const { msg } = props;
   return (
-    <div className='alert alert-info shadow-lg w-80 absolute bottom-12'>
+    <div className='alert alert-primary shadow-lg w-80 absolute bottom-12'>
       <div>
         <svg
           xmlns='http://www.w3.org/2000/svg'

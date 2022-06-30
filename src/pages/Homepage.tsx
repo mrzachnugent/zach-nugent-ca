@@ -1,8 +1,9 @@
 import { FC } from 'react';
+import { Terminal } from '../components';
 import { TERMINAL_MODAL_ID } from '../constants';
 
-export const Homepage: FC = () => {
-  return (
+export const Homepage: FC = () => (
+  <>
     <div className='hero min-h-full bg-base-200'>
       <div className='hero-content text-center'>
         <div className='max-w-md blob before:bg-gradient-to-t before:from-neutral '>
@@ -49,5 +50,6 @@ export const Homepage: FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+    <Terminal />
+  </>
+);

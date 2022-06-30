@@ -1,14 +1,15 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo, useRef, useState } from 'react';
 import {
   useAuthState,
   useSignInWithGithub,
   useSignInWithGoogle,
 } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { Spacer } from '../components/Spacer';
+import { Spacer, Terminal } from '../components';
 import { auth, db } from '../firebase';
 
 import { addDoc, collection } from 'firebase/firestore';
+import { uuid } from '../utils';
 
 const TOPICS = ['computer', 'gaming', 'music', 'wallpaper', 'cars', 'racing'];
 
@@ -36,7 +37,9 @@ const Star = ({
   isLarge?: boolean;
 }) => (
   <button
-    className={disabled ? className : 'btn btn-ghost ' + className}
+    className={
+      disabled ? className : 'btn btn-ghost focus:outline-info' + className
+    }
     disabled={disabled}
     onClick={onClick}
   >
@@ -56,6 +59,7 @@ const Star = ({
 );
 
 export const GuestBook: React.FC = () => {
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [rating, setRating] = useState(5);
   const [message, setMessage] = useState('');
 
@@ -131,6 +135,7 @@ export const GuestBook: React.FC = () => {
               <Spacer height={24} />
               <div className='max-w-2xl w-full flex flex-col items-center relative'>
                 <textarea
+                  ref={textAreaRef}
                   className='textarea textarea-info max-w-3xl bg-base-200 h-36 text-lg text-primary-content p-2'
                   style={{ width: 'calc(100% - 2em)', resize: 'none' }}
                   placeholder='Leave a message at the beep. BEEP!'
@@ -143,6 +148,7 @@ export const GuestBook: React.FC = () => {
                     <Star
                       className={i + 1 > rating ? 'opacity-30' : ''}
                       onClick={handleAssignStars(i)}
+                      key={uuid()}
                     />
                   ))}
                 </div>
@@ -158,63 +164,53 @@ export const GuestBook: React.FC = () => {
           )}
           <Spacer height={48} />
           {value?.docs.map((msg, i) => (
-            <>
-              <div
-                className='card card-side bg-base-100 shadow-xl max-w-2xl md:min-h-16 sm:min-h-10'
-                style={{ width: 'calc(100% - 2em)' }}
-              >
-                <figure>
-                  <img
-                    src={`https://source.unsplash.com/random/400x400/?${randomTopic}?sig=${
-                      i + 1
-                    }`}
-                    alt='random image'
-                    className='h-full hidden sm:inline-block w-60'
-                  />
-                </figure>
-                <div className='card-body px-10'>
-                  {msg.data()?.message ? (
-                    <p className='card-title text-primary-content'>
-                      {msg.data().message}
-                    </p>
-                  ) : (
-                    <>
-                      <p></p>
-                      <div>
-                        {range(msg.data()?.rating).map(() => (
-                          <Star disabled isLarge />
-                        ))}
-                      </div>
-                      <Spacer height={4} />
-                    </>
-                  )}
-                  <div className='card-actions justify-between items-center'>
-                    {msg.data().message ? (
-                      <div>
-                        {range(msg.data()?.rating).map(() => (
-                          <Star disabled />
-                        ))}
-                      </div>
-                    ) : (
-                      <div />
-                    )}
-                    <div
-                      className='tooltip'
-                      data-tip={msg.data()?.user?.displayName || 'Anonymous'}
-                    >
-                      <img
-                        src={msg.data()?.user?.photoURL}
-                        className='w-14 rounded-full'
-                      />
+            <div
+              className='card card-side bg-base-100 shadow-xl max-w-lg md:min-h-16 sm:min-h-10 mb-12'
+              style={{ width: 'calc(100% - 2em)' }}
+              key={msg.id}
+            >
+              <div className='card-body px-10'>
+                {msg.data()?.message ? (
+                  <p className='card-title text-primary-content'>
+                    {msg.data().message}
+                  </p>
+                ) : (
+                  <>
+                    <p></p>
+                    <div>
+                      {range(msg.data()?.rating).map(() => (
+                        <Star disabled isLarge key={uuid()} />
+                      ))}
                     </div>
+                    <Spacer height={4} />
+                  </>
+                )}
+                <div className='card-actions justify-between items-center'>
+                  {msg.data().message ? (
+                    <div>
+                      {range(msg.data()?.rating).map(() => (
+                        <Star disabled key={uuid()} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  <div
+                    className='tooltip'
+                    data-tip={msg.data()?.user?.displayName || 'Anonymous'}
+                  >
+                    <img
+                      src={msg.data()?.user?.photoURL}
+                      className='w-14 rounded-full'
+                    />
                   </div>
                 </div>
               </div>
-              <Spacer height={36} />
-            </>
+            </div>
           ))}
         </div>
       )}
+      <Terminal />
     </>
   );
 };
@@ -300,5 +296,3 @@ const GoogleLogInButton: FC = () => {
     </button>
   );
 };
-
-const getRandomImage = () => 'https://picsum.photos/400/400';
