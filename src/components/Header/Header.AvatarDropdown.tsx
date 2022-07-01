@@ -1,9 +1,9 @@
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, signOut } from '../../firebase';
+import { useApp } from '../../app-context';
+import { signOut } from '../../firebase';
 import { Spacer } from '../Spacer';
 
 export const AvatarDropdown = () => {
-  const [user] = useAuthState(auth);
+  const { user } = useApp();
 
   async function handleSignOut() {
     await signOut();

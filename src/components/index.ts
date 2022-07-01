@@ -6,4 +6,4 @@ export * from './Footer';
 export * from './GithubLogInButton';
 export * from './GoogleLogInButton';
 export * from './Star';
-export * from './CLI';
+export * from './Terminal';
