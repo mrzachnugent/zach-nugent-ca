@@ -4,3 +4,6 @@ export * from './Terminal';
 export * from './Spacer';
 export * from './Toast';
 export * from './Footer';
+export * from './GithubLogInButton';
+export * from './GoogleLogInButton';
+export * from './Star';

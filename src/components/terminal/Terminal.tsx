@@ -11,7 +11,11 @@ import { TERMINAL_MODAL_ID } from '../../constants';
 import { useTerminalStore } from '../../stores';
 import { wait } from '../../utils';
 import { Toast } from '../Toast';
-import { BOOT_UP_JSX, MAX_INPUT_LENGTH } from './Terminal.constants';
+import {
+  BOOT_UP_JSX,
+  MAX_INPUT_LENGTH,
+  SECOND_BOOT_UP_JSX,
+} from './Terminal.constants';
 import { useTerminal } from './useTerminal';
 
 export const Terminal: FC = () => {
@@ -20,16 +24,18 @@ export const Terminal: FC = () => {
   const bottomRef = useRef() as MutableRefObject<HTMLDivElement>;
   const [inputCount, setInputCount] = useState(0);
 
-  const { display, displayAdd, showToast } = useTerminalStore();
-  useTerminal(modalTogglerRef, inputRef);
+  const {
+    display,
+    displayAdd,
+    showToast,
+    firstTimeOpening,
+    toggleFirstTimeOpening,
+  } = useTerminalStore();
+  useTerminal(modalTogglerRef, inputRef, handleResetCount);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [display]);
-
-  useEffect(() => {
-    setInputCount(inputRef.current.value.length);
-  }, [inputRef]);
 
   function handleFocus(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) {
     e.preventDefault();
@@ -42,13 +48,24 @@ export const Terminal: FC = () => {
       displayAdd([BOOT_UP_JSX[0]]);
       for (let i = 1; i < BOOT_UP_JSX.length; i++) {
         await wait(300);
-        displayAdd([BOOT_UP_JSX[i]]);
+        if (firstTimeOpening) {
+          displayAdd([BOOT_UP_JSX[i]]);
+        } else {
+          displayAdd([SECOND_BOOT_UP_JSX[i]]);
+        }
       }
+    }
+    if (!e.target.checked && firstTimeOpening) {
+      toggleFirstTimeOpening();
     }
   }
 
   function handleOnInputChange(e: ChangeEvent<HTMLInputElement>) {
     setInputCount(e.target.value.length);
+  }
+
+  function handleResetCount() {
+    setInputCount(0);
   }
 
   return (

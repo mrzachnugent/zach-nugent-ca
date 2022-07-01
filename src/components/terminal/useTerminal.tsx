@@ -2,14 +2,15 @@ import { MutableRefObject, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTerminalStore } from '../../stores';
 import { includes, uuid, wait } from '../../utils';
-import { BOOT_UP_JSX } from './Terminal.constants';
+import { BOOT_UP_JSX, SECOND_BOOT_UP_JSX } from './Terminal.constants';
 import { SiTwitter, SiLinkedin, SiGithub, SiGmail } from 'react-icons/si';
 
 export const useTerminal = (
   modalTogglerRef: MutableRefObject<HTMLInputElement>,
-  inputRef: MutableRefObject<HTMLInputElement>
+  inputRef: MutableRefObject<HTMLInputElement>,
+  resetCount: () => void
 ) => {
-  const { displayAdd, displayReplace } = useTerminalStore();
+  const { displayAdd, displayReplace, firstTimeOpening } = useTerminalStore();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -140,13 +141,18 @@ export const useTerminal = (
         displayReplace([]);
         for (let i = 0; i < BOOT_UP_JSX.length; i++) {
           await wait(300);
-          displayAdd([BOOT_UP_JSX[i]]);
+          if (firstTimeOpening) {
+            displayAdd([BOOT_UP_JSX[i]]);
+          } else {
+            displayAdd([SECOND_BOOT_UP_JSX[i]]);
+          }
         }
         return;
       }
 
       // Reset input text on Enter
       inputRef.current.value = '';
+      resetCount();
     }
   }
 
