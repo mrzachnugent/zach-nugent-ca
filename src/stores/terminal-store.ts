@@ -3,26 +3,17 @@ import create from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 interface ITerminalStore {
-  inputText: string;
-  inputTextReset(): void;
-  inputTextReplace(str: string): void;
-  inputTextConcat(char: string): void;
   display: ReactNode[];
   displayAdd(jssxArr: ReactNode[]): void;
   displayReplace(jsxArr: ReactNode[]): void;
   showToast: boolean;
   showToastChange(isShowing: boolean): void;
+  firstTimeOpening: boolean;
+  toggleFirstTimeOpening(): void;
 }
 
 export const useTerminalStore = create(
   immer<ITerminalStore>((set) => ({
-    // Input
-    inputText: '',
-    inputTextReset: () => set({ inputText: '' }),
-    inputTextReplace: (str) => set({ inputText: str }),
-    inputTextConcat: (char) => {
-      set((state) => ({ inputText: state.inputText + char }));
-    },
     // Display
     display: [],
     displayAdd: (jsxArr) => {
@@ -35,6 +26,11 @@ export const useTerminalStore = create(
     showToast: false,
     showToastChange: (isShowing) => {
       set({ showToast: isShowing });
+    },
+    // First time opening terminal
+    firstTimeOpening: true,
+    toggleFirstTimeOpening: () => {
+      set((state) => ({ firstTimeOpening: !state.firstTimeOpening }));
     },
   }))
 );
