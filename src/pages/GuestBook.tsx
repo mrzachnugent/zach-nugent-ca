@@ -1,18 +1,17 @@
 import { FC, useRef, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import {
   GithubLogInButton,
   GoogleLogInButton,
   Spacer,
   Star,
-  Terminal,
 } from '../components';
-import { auth, db } from '../firebase';
+import { db } from '../firebase';
 
 import { addDoc, collection } from 'firebase/firestore';
 import { BiError } from 'react-icons/bi';
 import { SiSpinrilla } from 'react-icons/si';
+import { useApp } from '../app-context';
 import { range, uuid } from '../utils';
 
 export const GuestBook: FC = () => {
@@ -20,7 +19,7 @@ export const GuestBook: FC = () => {
   const [rating, setRating] = useState(5);
   const [message, setMessage] = useState('');
 
-  const [user, loadingAuth, errorAuth] = useAuthState(auth);
+  const { user, loadingAuth, errorAuth } = useApp();
   const [value, loadingSignatures, errorSignature] = useCollection(
     collection(db, 'guest-book-signatures')
   );
@@ -154,7 +153,6 @@ export const GuestBook: FC = () => {
           ))}
         </div>
       )}
-      <Terminal />
     </>
   );
 };
