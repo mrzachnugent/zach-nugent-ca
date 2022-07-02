@@ -16,7 +16,7 @@ export const GithubLogInButton: FC = () => {
         <svg
           stroke='currentColor'
           fill='black'
-          stroke-width='0'
+          strokeWidth='0'
           viewBox='0 0 16 16'
           height='1.7em'
           width='1.7em'
