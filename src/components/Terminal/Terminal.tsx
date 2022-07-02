@@ -402,6 +402,9 @@ export const Terminal: FC = () => {
         className='modal-toggle'
         ref={modalTogglerRef}
         onChange={handleOnModalToggleChange}
+        autoComplete='off'
+        spellCheck={false}
+        autoCapitalize='off'
       />
       <label
         htmlFor={TERMINAL_MODAL_ID}
