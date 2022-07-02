@@ -19,17 +19,16 @@ export const TerminalJoke = () => {
     getJoke();
   }, []);
   return (
-    <div>
-      <pre data-prefix='>' className='text-primary-content capitalize'>
-        JOKE 😉!
-      </pre>
-      <p>Joke</p>
-      <p>{randomJoke}</p>
-      <pre data-prefix='😀' className='pb-4'>
-        <code>
-          Enter <kbd className='kbd'>j</kbd> for another one joke
-        </code>
-      </pre>
+    <div className='  w-full flex flex-col justify-center items-center px-2 pb-4'>
+      <p className='text-4xl text-primary-content py-4 font-extrabold'>
+        JOKE TIME!
+      </p>
+      <div className='rounded-2xl h-40 max-w-full w-96 bg-base-200 text-neutral-content flex justify-center items-center'>
+        <div className='card-body items-center text-center '>
+          <p className='text-6xl absolute opacity-10'>😂</p>
+          <p className='card-description'>{randomJoke}</p>
+        </div>
+      </div>
     </div>
   );
 };

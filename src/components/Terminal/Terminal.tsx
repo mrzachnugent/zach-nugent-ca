@@ -13,6 +13,7 @@ import { TERMINAL_MODAL_ID } from '../../constants';
 import { useTerminalStore } from '../../stores';
 import { includes, isExactly, uuid, wait } from '../../utils';
 import { Toast } from '../Toast';
+import { TerminalBotHelp } from './Terminal.BotHelp';
 import {
   BOOT_UP_JSX,
   MAX_INPUT_LENGTH,
@@ -155,52 +156,78 @@ export const Terminal: FC = () => {
       else if (terminalInput.split(' ')[0] === 'nav') {
         if (inputIs(['nav --help'])) {
           displayAdd([
-            <div key={uuid()}>
-              <pre
-                data-prefix='>'
-                className='text-primary-content whitespace-pre-wrap'
-              >
-                <code>
-                  <kbd className='kbd'>nav home</kbd>
-                  to go to home page
-                </code>
-              </pre>
-              <pre
-                data-prefix='>'
-                className='text-primary-content whitespace-pre-wrap'
-              >
-                <code>
-                  <kbd className='kbd'>nav guest-book</kbd>
-                  to go sign my guestbook
-                </code>
-              </pre>
+            <div
+              className='overflow-x-auto ml-4 mr-2 rounded-lg border-base-200 border my-4'
+              key={uuid()}
+            >
+              <table className='table w-full table-zebra'>
+                {/* <!-- head --> */}
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Command</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* <!-- row 1 --> */}
+                  <tr>
+                    <th>1</th>
+                    <td>
+                      <code>nav home</code>
+                    </td>
+                    <td>Go to homepage</td>
+                  </tr>
+                  {/* <!-- row 2 --> */}
+                  <tr>
+                    <th>2</th>
+                    <td>
+                      <code>nav guest-book</code>
+                    </td>
+                    <td>Go to guest book page</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>,
           ]);
         } else if (inputIs(['nav guest-book'])) {
           navigate('guest-book');
           displayAdd([
-            <pre data-prefix='>' className='text-primary-content' key={uuid()}>
-              <code>🤖 You are now on the Guest Book page</code>
-            </pre>,
-            <pre data-prefix='?' className='pb-4' key={uuid()}>
-              Enter <kbd className='kbd'>q</kbd> to quit this terminal session
-            </pre>,
+            <div key={uuid()} className='max-w-full'>
+              <pre
+                data-prefix='>'
+                className='text-primary-content whitespace-pre-wrap'
+              >
+                <code>Location: Guest Book page</code>
+              </pre>
+              <pre data-prefix='?' className='pb-4 whitespace-pre-wrap'>
+                Enter <kbd className='kbd'>q</kbd> to quit
+              </pre>
+            </div>,
           ]);
           window.scrollTo(0, 0);
         } else if (inputIs(['nav home'])) {
           navigate('/');
           displayAdd([
-            <pre data-prefix='>' className='text-primary-content' key={uuid()}>
-              <code>🤖 You are now on the Home page</code>
+            <pre
+              data-prefix='>'
+              className='text-primary-content  whitespace-pre-wrap'
+              key={uuid()}
+            >
+              <code>Location: Home page</code>
             </pre>,
-            <pre data-prefix='?' className='pb-4' key={uuid()}>
-              Enter <kbd className='kbd'>q</kbd> to quit this terminal session
+            <pre
+              data-prefix='?'
+              className='pb-4  whitespace-pre-wrap'
+              key={uuid()}
+            >
+              Enter <kbd className='kbd'>q</kbd> to quit
             </pre>,
           ]);
           window.scrollTo(0, 0);
         } else {
           displayAdd([
-            <pre data-prefix='>' className='text-red-500' key={uuid()}>
+            <pre data-prefix='!' className='text-red-500' key={uuid()}>
               <code>Error: navigation command not found</code>
             </pre>,
             <pre data-prefix='?' className='pb-4' key={uuid()}>
@@ -244,11 +271,6 @@ export const Terminal: FC = () => {
           >
             {terminalInput} {!!user ? user.displayName : 'Anonymous person'}!
           </pre>,
-          <pre data-prefix='😀' className='pb-4' key={uuid()}>
-            <code>
-              Enter <kbd className='kbd'>j</kbd> for a joke
-            </code>
-          </pre>,
         ]);
         // small talk
       } else if (
@@ -275,17 +297,77 @@ export const Terminal: FC = () => {
           >
             I'm absolutely BUZZing 😉!
           </pre>,
+        ]);
+      } else if (
+        inputIncludes(['joke'], ['dont', "don't", 'no']) ||
+        inputIs(['j', 'another', 'another one', 'again'])
+      ) {
+        displayAdd([<TerminalJoke key={uuid()} />]);
+      } else if (
+        inputIs([
+          'who are you',
+          'who are you?',
+          'who is you',
+          'who is you?',
+          'what is you',
+          'what is you?',
+          'what are you',
+          'what are you?',
+          'sing',
+          'sing me a song',
+        ])
+      ) {
+        displayAdd([
+          <div
+            className='  w-full flex flex-col justify-center items-center px-2 pb-4'
+            key={uuid()}
+          >
+            <p className='text-4xl text-primary-content py-4 font-extrabold'>
+              SONG TIME!
+            </p>
+            <div className='rounded-2xl max-w-full  w-96 bg-base-200 text-neutral-content flex justify-center items-center'>
+              <div className='card-body items-center text-center '>
+                <p className='text-6xl absolute opacity-20'>♬</p>
+                <p className='card-description'>
+                  I'm a little robot, naughts and ones. Here is my CLI, here's
+                  where I lie. When I get all chatty, I tell jokes. They're not
+                  original, they're not good. But I'm a very special bot, this
+                  is true. Here's an example Of what I can do, I can wiggle my
+                  way to your heart. Hope you enjoyed me, it's modern art.
+                </p>
+              </div>
+            </div>
+          </div>,
+        ]);
+      } else if (inputIs(['bot --help'])) {
+        displayAdd([<TerminalBotHelp key={uuid()} />]);
+      } else if (
+        inputIs([
+          'lol',
+          'loll',
+          'lolo',
+          'lolll',
+          'ha',
+          'haha',
+          'hahaha',
+          'hahahaha',
+        ])
+      ) {
+        displayAdd([
+          <pre
+            data-prefix='>'
+            className='text-primary-content whitespace-pre-wrap'
+            key={uuid()}
+          >
+            If you think that's funny, you should hear the next joke that I'm
+            saving up for you
+          </pre>,
           <pre data-prefix='😀' className='pb-4' key={uuid()}>
             <code>
               Enter <kbd className='kbd'>j</kbd> for a joke
             </code>
           </pre>,
         ]);
-      } else if (
-        inputIncludes(['joke'], ['dont', "don't", 'no']) ||
-        inputIs(['j'])
-      ) {
-        displayAdd([<TerminalJoke key={uuid()} />]);
       }
 
       // unrecognized commands
