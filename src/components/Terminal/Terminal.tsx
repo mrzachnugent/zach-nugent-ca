@@ -106,6 +106,9 @@ export const Terminal: FC = () => {
       e.preventDefault();
       if (!terminalInput.length) return;
       addMyCommand(terminalInput);
+      if (window.innerWidth < 450) {
+        inputRef.current.blur();
+      }
 
       displayAdd([
         <pre data-prefix='>' key={uuid()}>
