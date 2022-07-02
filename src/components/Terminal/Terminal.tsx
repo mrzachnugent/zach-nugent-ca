@@ -402,10 +402,6 @@ export const Terminal: FC = () => {
         className='modal-toggle'
         ref={modalTogglerRef}
         onChange={handleOnModalToggleChange}
-        autoComplete='off'
-        spellCheck={false}
-        autoCorrect='off'
-        autoCapitalize='none'
       />
       <label
         htmlFor={TERMINAL_MODAL_ID}
@@ -434,6 +430,10 @@ export const Terminal: FC = () => {
                 maxLength={MAX_INPUT_LENGTH}
                 onChange={handleOnInputChange}
                 onKeyDown={handleOnKeyDown}
+                autoComplete='off'
+                spellCheck={false}
+                autoCorrect='off'
+                autoCapitalize='none'
               />
             </pre>
             <div className='flex justify-end'>
