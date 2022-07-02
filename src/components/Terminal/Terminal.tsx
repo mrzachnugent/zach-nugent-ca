@@ -404,7 +404,8 @@ export const Terminal: FC = () => {
         onChange={handleOnModalToggleChange}
         autoComplete='off'
         spellCheck={false}
-        autoCapitalize='off'
+        autoCorrect='off'
+        autoCapitalize='none'
       />
       <label
         htmlFor={TERMINAL_MODAL_ID}
